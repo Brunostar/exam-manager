@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notify_me/screens/authentication/success_screen.dart';
 
 class OnboardingPage extends StatefulWidget {
   bool isAdmin;
@@ -13,6 +14,14 @@ class Department {
   String name;
   int levels;
 
+  List<String> levelList() {
+    List<String> result = [];
+    for (int i = 2; i <= levels + 1; i++) {
+      result.add('Level ${i * 100}');
+    }
+    return result;
+  }
+
   Department(this.name, this.levels);
 }
 
@@ -25,19 +34,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
   List<Department> _departments = [];
 
   // List<String> _departmentNames = [];
-  List<List<String>> _departmentLevels = [];
+  // List<List<String>> _departmentLevels = [];
 
   final _formKey = GlobalKey<FormState>();
   final _departmentNameControllers = <TextEditingController>[];
-  final _departmentLevelControllers = <List<TextEditingController>>[];
+
+  // final _departmentLevelControllers = <List<TextEditingController>>[];
 
   @override
   void initState() {
     super.initState();
     _departmentNameControllers
         .addAll(List.generate(_numDepartments, (_) => TextEditingController()));
-    _departmentLevelControllers.addAll(List.generate(_numDepartments,
-        (_) => List.generate(4, (_) => TextEditingController())));
+    // _departmentLevelControllers.addAll(List.generate(_numDepartments,
+    //     (_) => List.generate(4, (_) => TextEditingController())));
   }
 
   @override
@@ -55,62 +65,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildAdminPage() {
     return Form(
-        key: _formKey,
-        child: _currentStep == 0
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LinearProgressIndicator(
-                    value: (_currentStep + 1) / 4,
-                  ),
-                  SizedBox(height: 16.0),
-                  Text('Are you an admin?'),
-                  SizedBox(height: 8.0),
-                  DropdownButtonFormField(
-                    value: null,
-                    items: const [
-                      DropdownMenuItem(
-                        value: true,
-                        child: Text('Yes'),
-                      ),
-                      DropdownMenuItem(
-                        value: false,
-                        child: Text('No'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        widget.isAdmin = value as bool;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select an option';
-                      }
-                      return null;
-                    },
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                      final formState = _formKey.currentState;
-                      if (formState != null && formState.validate()) {
-                        formState.save();
-                        setState(() {
-                          _currentStep++;
-                        });
-                      }
-                    },
-                    child: Text('Next'),
-                  ),
-                ],
-              )
-            : _currentStep == 1
+      key: _formKey,
+      child: SingleChildScrollView(
+        // physics: const NeverScrollableScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width,
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: IntrinsicHeight(
+            child: _currentStep == 0
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       LinearProgressIndicator(
-                        value: (_currentStep + 1) / 4,
+                        value: (_currentStep + 1) / 3,
                       ),
                       const SizedBox(height: 16.0),
                       const Text('How many departments does your school have?'),
@@ -131,7 +100,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           _numDepartments = int.parse(value!);
                           _departmentNameControllers.addAll(List.generate(
                               _numDepartments, (_) => TextEditingController()));
-                          _departments.addAll(List.generate((_numDepartments), (_) => Department("dep", 1)));
+                          _departments.addAll(List.generate(
+                              (_numDepartments), (_) => Department("dep", 1)));
                         },
                       ),
                       const Spacer(),
@@ -162,12 +132,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ),
                     ],
                   )
-                : _currentStep == 2
+                : _currentStep == 1
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           LinearProgressIndicator(
-                            value: (_currentStep + 1) / 4,
+                            value: (_currentStep + 1) / 3,
                           ),
                           const SizedBox(height: 16.0),
                           Column(
@@ -216,7 +186,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               ],
                             ],
                           ),
-
                           const Spacer(),
                           Row(
                             children: [
@@ -244,201 +213,229 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           ),
                         ],
                       )
-                    : _currentStep == 3
+                    : _currentStep == 2
                         ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    LinearProgressIndicator(
-                                      value: (_currentStep + 1) / 4,
-                                    ),
-                                    SizedBox(height: 16.0),
-                                    for (int i = 0;
-                                        i < _numDepartments;
-                                        i++) ...[
-                                      Text(
-                                          'Department ${_departmentNameControllers[i].text}'),
-                                      SizedBox(height: 8.0),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          // Implement file upload logic
-                                        },
-                                        child: Text('Upload Timetable'),
-                                      ),
-                                      SizedBox(height: 16.0),
-                                    ],
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _currentStep--;
-                                            });
-                                          },
-                                          child: Text('Back'),
-                                        ),
-                                        Spacer(),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Implement form submission logic
-                                          },
-                                          child: Text('Submit'),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                        : Text('Invalid Step'));
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              LinearProgressIndicator(
+                                value: (_currentStep + 1) / 3,
+                              ),
+                              SizedBox(height: 16.0),
+                              for (int i = 0; i < _numDepartments; i++) ...[
+                                Text(
+                                    'Department ${_departmentNameControllers[i].text}'),
+                                SizedBox(height: 8.0),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Implement file upload logic
+                                  },
+                                  child: Text('Upload Timetable'),
+                                ),
+                                SizedBox(height: 16.0),
+                              ],
+                              Spacer(),
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _currentStep--;
+                                      });
+                                    },
+                                    child: Text('Back'),
+                                  ),
+                                  Spacer(),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Implement form submission logic
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SetupSuccessScreen()),
+                                      );
+                                    },
+                                    child: Text('Submit'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Text('Invalid Step'),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildUserPage() {
-    // if (_currentStep == 0) {
+    _departments = [Department("name 1", 2), Department("name 2", 3)];
     return Form(
       key: _formKey,
-      child: _currentStep == 0
-      ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LinearProgressIndicator(
-            value: (_currentStep + 1) / 3,
+      child: SingleChildScrollView(
+        // physics: const NeverScrollableScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width,
+            minHeight: MediaQuery.of(context).size.height,
           ),
-          SizedBox(height: 16.0),
-          Text('What is your name?'),
-          SizedBox(height: 8.0),
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name';
-              }
-              return null;
-            },
-            onSaved: (value) {
-              _userName = value!;
-            },
+          child: IntrinsicHeight(
+            child: _currentStep == 0
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LinearProgressIndicator(
+                        value: (_currentStep + 1) / 3,
+                      ),
+                      SizedBox(height: 16.0),
+                      Text('What is your name?'),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _userName = value!;
+                        },
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            setState(() {
+                              _currentStep++;
+                            });
+                          }
+                        },
+                        child: Text('Next'),
+                      ),
+                    ],
+                  )
+                : _currentStep == 1
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LinearProgressIndicator(
+                            value: (_currentStep + 1) / 3,
+                          ),
+                          SizedBox(height: 16.0),
+                          Text('Which department are you in?'),
+                          SizedBox(height: 8.0),
+                          DropdownButtonFormField(
+                            value: null,
+                            items: [
+                              for (var department in _departments)
+                                DropdownMenuItem(
+                                  value: department,
+                                  child: Text(department.name),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              _userDepartment = _departments.indexOf(value!);
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a department';
+                              }
+                              return null;
+                            },
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _currentStep--;
+                                  });
+                                },
+                                child: Text('Back'),
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    setState(() {
+                                      _currentStep++;
+                                    });
+                                  }
+                                },
+                                child: Text('Next'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : _currentStep == 2
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              LinearProgressIndicator(
+                                value: (_currentStep + 1) / 3,
+                              ),
+                              SizedBox(height: 16.0),
+                              Text('Please select a class level'),
+                              SizedBox(height: 8.0),
+                              DropdownButtonFormField(
+                                value: null,
+                                items: [
+                                  for (var level
+                                      in _departments[_userDepartment]
+                                          .levelList())
+                                    DropdownMenuItem(
+                                      value: level,
+                                      child: Text(level),
+                                    ),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    _userLevel = value as String;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a class level';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              Spacer(),
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _currentStep--;
+                                      });
+                                    },
+                                    child: Text('Back'),
+                                  ),
+                                  Spacer(),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Implement form submission logic
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SetupSuccessScreen()),
+                                      );
+                                    },
+                                    child: Text('Submit'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Text('Invalid Step'),
           ),
-          Spacer(),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-              setState(() {
-                _currentStep++;
-              });
-              }
-            },
-            child: Text('Next'),
-          ),
-        ],
-      ) : _currentStep == 1
-      ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LinearProgressIndicator(
-            value: (_currentStep + 1) / 3,
-          ),
-          SizedBox(height: 16.0),
-          Text('Which department are you in?'),
-          SizedBox(height: 8.0),
-          DropdownButtonFormField(
-            value: null,
-            items: [
-              for (var department in _departments)
-                DropdownMenuItem(
-                  value: department.name,
-                  child: Text(department.name),
-                ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _userDepartment = value as int;
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a department';
-              }
-              return null;
-            },
-          ),
-          Spacer(),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentStep--;
-                  });
-                },
-                child: Text('Back'),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                  setState(() {
-                    _currentStep++;
-                  });
-                  }
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
-      ) : _currentStep == 2
-      ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LinearProgressIndicator(
-            value: (_currentStep + 1) / 3,
-          ),
-          SizedBox(height: 16.0),
-          Text('Please select a class level'),
-          SizedBox(height: 8.0),
-          DropdownButtonFormField(
-            value: null,
-            items: [
-              for (var level in _departmentLevels[_userDepartment])
-                DropdownMenuItem(
-                  value: level,
-                  child: Text(level),
-                ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _userLevel = value as String;
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a class level';
-              }
-              return null;
-            },
-          ),
-          Spacer(),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _currentStep--;
-                  });
-                },
-                child: Text('Back'),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  // Implement form submission logic
-                },
-                child: Text('Submit'),
-              ),
-            ],
-          ),
-        ],
-      ) : Text('Invalid Step'),
+        ),
+      ),
     );
   }
 }

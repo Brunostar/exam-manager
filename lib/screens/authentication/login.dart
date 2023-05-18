@@ -280,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 // Authenticate user here
                                 if (_isAdmin) {
                                   // Authenticate admin user with email and password
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -288,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 } else {
                                   // Authenticate non-admin user with pin
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
