@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:notify_me/screens/authentication/admin_dashboard.dart';
-import 'package:notify_me/screens/authentication/login.dart';
+import 'package:notify_me/screens/authentication/bluetooth_connection.dart';
 
 void main() {
   // Make android status bar transparent for all the pages
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AdminHomePage(),
+      home: BluetoothApp(),
     );
   }
 }

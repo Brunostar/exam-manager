@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'add_course.dart';
+
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
 
@@ -118,7 +120,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          // TODO: Add code to add a new course
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                AddCoursePage()),
+          );
         },
       ),
     );
