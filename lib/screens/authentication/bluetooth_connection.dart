@@ -2,24 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-// void main() => runApp(MyApp());
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Bluetooth IoT Demo',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primaryColor: Colors.blue,
-//       ),
-//       home: BluetoothApp(),
-//     );
-//   }
-// }
-
 class BluetoothApp extends StatefulWidget {
   const BluetoothApp({super.key});
 
