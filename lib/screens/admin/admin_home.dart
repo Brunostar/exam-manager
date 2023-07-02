@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'add_course.dart';
+import '../authentication/add_course.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -35,18 +35,18 @@ class _AdminHomePageState extends State<AdminHomePage> {
     departmentCourses.sort((a, b) => a.classLevel.compareTo(b.classLevel));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Admin Home'),
-        actions: [
-          // Upload button
-          IconButton(
-            icon: Icon(Icons.upload_file),
-            onPressed: () {
-              // _uploadCourses();
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('Admin Home'),
+      //   actions: [
+      //     // Upload button
+      //     // IconButton(
+      //     //   icon: Icon(Icons.upload_file),
+      //     //   onPressed: () {
+      //     //     // _uploadCourses();
+      //     //   },
+      //     // ),
+      //   ],
+      // ),
       body: Column(
         children: [
           // Department selection dropdown
@@ -117,17 +117,39 @@ class _AdminHomePageState extends State<AdminHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                AddCoursePage()),
-          );
-        },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        height: 48,
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddCoursePage()),
+              );
+            },
+            child: const Text(
+              'Add Department',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) =>
+      //           AddCoursePage()),
+      //     );
+      //   },
+      // ),
     );
   }
 }

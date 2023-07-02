@@ -94,7 +94,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Error'),
-                        content: Text('Could not add department. Please try again.'),
+                        content:
+                            Text('Could not add department. Please try again.'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -150,7 +151,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Error'),
-                        content: Text('Could not delete department. Please try again.'),
+                        content: const Text(
+                            'Could not delete department. Please try again.'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -183,130 +185,84 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Show a dialog for editing department information
     editNameController.text = department.name;
     editLevelsController.text = department.levels.toString();
-    showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Edit Department'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: editNameController,
-              decoration: InputDecoration(
-                labelText: 'Department name',
-              ),
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Edit Department'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: editNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Department name',
+                  ),
+                ),
+                TextField(
+                  controller: editLevelsController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Number of levels',
+                  ),
+                ),
+              ],
             ),
-            TextField(
-              controller: editLevelsController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Number of levels',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              try {
-                // Update the department information in the database
-                department.name = editNameController.text;
-                department.levels = int.parse(editLevelsController.text);
-                await departmentDb.updateDepartment(department);
-                // Refresh the list of departments and close the dialog
-                Navigator.of(context).pop();
-                setState(() {});
-              } catch (e) {
-                // Show an error message if the department information could not be updated
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Error'),
-                      content: Text('Could not update department information. Please try again.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('OK'),
-                        ),
-                      ],
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  try {
+                    // Update the department information in the database
+                    department.name = editNameController.text;
+                    department.levels = int.parse(editLevelsController.text);
+                    await departmentDb.updateDepartment(department);
+                    // Refresh the list of departments and close the dialog
+                    Navigator.of(context).pop();
+                    setState(() {});
+                  } catch (e) {
+                    // Show an error message if the department information could not be updated
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error'),
+                          content: Text(
+                              'Could not update department information. Please try again.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
                     );
-                  },
-                );
-              }
-            },
-            child: Text('Save'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Close the dialog without saving changes
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      );
-    });
+                  }
+                },
+                child: Text('Save'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Close the dialog without saving changes
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        });
   }
 
   // Helper function to read data from an Excel file
-  Future<void> _readExcelData(File file) async {
-    for (var dep in departments) {
-      try {
-        // Read the contents of the file
-        List<List<dynamic>> excelData = await ExcelImporter.readExcel(
-          file.path, dep.code);
-
-        // Iterate through each row of the Excel data
-        for (var row in excelData) {
-          // Create a new course object from the row data
-          try {
-            // int level = int.parse(row[2]);
-            // int time = int.parse(row[5]);
-            Course course = Course(
-                title: row[0],
-                code: row[1],
-                level: int.parse(row[2]),
-                date: row[3],
-                start: row[4],
-                time: int.parse(row[5]),
-                department: dep.code
-            );
-
-            // Insert the course into the database
-            await courseDb.insertCourse(course);
-          } catch (err) {
-            continue;
-          }
-        }
-
-        // Refresh the list of courses and show a success message
-        setState(() {});
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Courses added successfully.'),
-        ));
-      } catch (e) {
-        // Show an error message if the Excel data could not be read
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Error'),
-              content: Text('Could not read Excel data. Please try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    }
+  Future<void> _readExcelData(String file) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExcelReader(filePath: file),
+      ),
+    );
   }
 
   // Helper function to handle file selection
@@ -320,7 +276,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (result != null) {
       // Read the selected Excel file and add the courses to the database
       File file = File(result.files.single.path!);
-      await _readExcelData(file);
+      await _readExcelData(result.files.single.path!);
     }
   }
 
@@ -341,7 +297,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
         child: FutureBuilder<List<Department>>(
           future: departmentDb.getDepartments(),
-          builder: (BuildContext context, AsyncSnapshot<List<Department>> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Department>> snapshot) {
             if (!snapshot.hasData) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -352,7 +309,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               itemBuilder: (BuildContext context, int index) {
                 Department department = snapshot.data![index];
                 return Card(
-                  margin: const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+                  margin: const EdgeInsets.only(
+                      top: 12, bottom: 12, left: 6, right: 6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -360,13 +318,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 12),
                     title: Text(department.name),
-                    subtitle: Text('${department.code}    ${department.levels} levels'),
+                    subtitle: Text(
+                        '${department.code}    ${department.levels} levels'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           onPressed: () => editDepartment(department),
-                          icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                          icon: Icon(Icons.edit,
+                              color: Theme.of(context).primaryColor),
                         ),
                         IconButton(
                           onPressed: () => deleteDepartment(department),

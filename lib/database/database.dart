@@ -24,12 +24,12 @@ void createDatabase() async {
       await db.execute('''
         CREATE TABLE courses (
           code TEXT PRIMARY KEY,
-          title TEXT,
-          department TEXT,
-          level INTEGER,
-          date DATE,
-          start TIME,
-          time INTEGER,
+          title TEXT NOT NULL,
+          department TEXT NOT NULL,
+          level INTEGER NOT NULL,
+          date TEXT NOT NULL,
+          start TEXT NOT NULL,
+          time INTEGER NOT NULL
           FOREIGN KEY (department) REFERENCES departments(code)
         )
       ''');
