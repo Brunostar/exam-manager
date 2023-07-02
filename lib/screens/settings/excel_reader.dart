@@ -54,15 +54,15 @@ class _ExcelReaderState extends State<ExcelReader> {
   }
 
   Future<void> _addContentToDb() async {
-    for (var row in _rows) {
+    for (var i = 0; i < _rows.length; i += 6) {
       try {
         Course course = Course(
-            title: row[0],
-            code: row[1],
-            level: int.parse(row[2]),
-            date: row[3],
-            start: row[4],
-            time: int.parse(row[5]),
+            title: _rows[i+0],
+            code: _rows[i+1],
+            level: 200,
+            date: _rows[i+3],
+            start: _rows[i+4],
+            time: 90,
             department: "COME"
         );
         // Insert the course into the database

@@ -29,7 +29,7 @@ void createDatabase() async {
           level INTEGER NOT NULL,
           date TEXT NOT NULL,
           start TEXT NOT NULL,
-          time INTEGER NOT NULL
+          time INTEGER NOT NULL,
           FOREIGN KEY (department) REFERENCES departments(code)
         )
       ''');
