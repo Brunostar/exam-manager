@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notify_me/screens/admin/admin_app.dart';
+import 'package:notify_me/screens/admin/bluetooth.dart';
 import 'database/database.dart';
 
 void main() {

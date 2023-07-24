@@ -59,11 +59,11 @@ class _ExcelReaderState extends State<ExcelReader> {
         Course course = Course(
             title: _rows[i+0],
             code: _rows[i+1],
-            level: 200,
+            level: double.parse(_rows[i+2]).toInt(),
             date: _rows[i+3],
             start: _rows[i+4],
-            time: 90,
-            department: "COME"
+            time: double.parse(_rows[i+5]).toInt(),
+            department: _rows[i+1].substring(0,4)
         );
         // Insert the course into the database
         await courseDb.insertCourse(course);
@@ -72,10 +72,12 @@ class _ExcelReaderState extends State<ExcelReader> {
         continue;
       }
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
+    if(!_isLoading) Navigator.pop(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Excel Reader'),

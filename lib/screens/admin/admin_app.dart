@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 import '../settings/settings.dart';
 import 'admin_home.dart';
+import 'bluetooth.dart';
 
 class AdminApp extends StatefulWidget {
   const AdminApp({Key? key}) : super(key: key);
@@ -37,23 +39,16 @@ class _AdminAppState extends State<AdminApp> {
           physics: const NeverScrollableScrollPhysics(),
           controller: pageController,
           children: <Widget>[
-            AdminHomePage(),
+            CourseScreen(connection: null),
             // Container(
             //   alignment: Alignment.center,
             //   child: Icon(
-            //     Icons.favorite_rounded,
+            //     Icons.bluetooth_rounded,
             //     size: 56,
-            //     color: Colors.red[400],
+            //     color: Colors.green[400],
             //   ),
             // ),
-            Container(
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.bluetooth_rounded,
-                size: 56,
-                color: Colors.green[400],
-              ),
-            ),
+            BluetoothScreen(),
             SettingsScreen()
           ],
         ),
@@ -73,9 +68,6 @@ class _AdminAppState extends State<AdminApp> {
               filledIcon: Icons.home_rounded,
               outlinedIcon: Icons.home_outlined,
             ),
-            // BarItem(
-            //     filledIcon: Icons.favorite_rounded,
-            //     outlinedIcon: Icons.favorite_border_rounded),
             BarItem(
               filledIcon: Icons.bluetooth_rounded,
               outlinedIcon: Icons.bluetooth_outlined,

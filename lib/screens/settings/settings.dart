@@ -294,53 +294,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-        child: FutureBuilder<List<Department>>(
-          future: departmentDb.getDepartments(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Department>> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: (BuildContext context, int index) {
-                Department department = snapshot.data![index];
-                return Card(
-                  margin: const EdgeInsets.only(
-                      top: 12, bottom: 12, left: 6, right: 6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 4,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                    title: Text(department.name),
-                    subtitle: Text(
-                        '${department.code}    ${department.levels} levels'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () => editDepartment(department),
-                          icon: Icon(Icons.edit,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                        IconButton(
-                          onPressed: () => deleteDepartment(department),
-                          icon: Icon(Icons.delete, color: Colors.red),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+      child: FutureBuilder<List<Department>>(
+        future: departmentDb.getDepartments(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Department>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
+          }
+          return ListView.builder(
+            itemCount: snapshot.data?.length,
+            itemBuilder: (BuildContext context, int index) {
+              Department department = snapshot.data![index];
+              return Card(
+                margin: const EdgeInsets.only(
+                    top: 12, bottom: 12, left: 6, right: 6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 4,
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                  title: Text(department.name),
+                  subtitle: Text(
+                      '${department.code}    ${department.levels} levels'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => editDepartment(department),
+                        icon: Icon(Icons.edit,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                      IconButton(
+                        onPressed: () => deleteDepartment(department),
+                        icon: Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
+    ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         height: 48,
